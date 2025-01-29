@@ -22,8 +22,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y curl
         curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
-        ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose  # ✅ Add sudo
+        sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose  # ✅ Add sudo
 
     - name: 📤 Pull Latest Docker Images
       run: |
