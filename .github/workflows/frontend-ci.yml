@@ -45,7 +45,7 @@ jobs:
         cd frontend
         docker build -t ghcr.io/vinaygs911/healthcare-frontend:latest .
 
-     - name: 🔑 Login to GitHub Container Registry
+    - name: 🔑 Login to GitHub Container Registry  # ✅ FIXED INDENTATION
       run: |
         echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
