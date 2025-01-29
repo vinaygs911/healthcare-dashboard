@@ -28,6 +28,10 @@ jobs:
         cd backend
         npm install
 
+    - name: 🔑 Login to GitHub Container Registry
+      run: |
+        echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
     - name: 🏗 Build & Tag Docker Image
       run: |
         cd backend
