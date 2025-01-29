@@ -10,7 +10,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/healthcare
     depends_on:
       mongo:
-        condition: service_healthy  # Ensures MongoDB is ready before starting backend
+        condition: service_healthy
 
   frontend:
     image: ghcr.io/vinaygs911/healthcare-frontend:latest
@@ -21,7 +21,7 @@ services:
       - backend
 
   nginx:
-    build: ./nginx
+    build: .
     restart: always
     ports:
       - "80:80"
