@@ -27,7 +27,7 @@ jobs:
     - name: 🔧 Install Dependencies
       run: |
         cd frontend
-        npm install
+        npm install --force
 
     - name: 🏗 Build Angular App
       run: |
