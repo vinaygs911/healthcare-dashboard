@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Healthcare Dashboard
+name: Backend CI/CD Pipeline
 
 on:
   push:
@@ -11,13 +11,6 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
-
     steps:
     - name: 📥 Checkout Repository
       uses: actions/checkout@v3
@@ -28,28 +21,23 @@ jobs:
         node-version: 18
         cache: 'npm'
 
-    - name: 🔧 Install Backend Dependencies
+    - name: 🔧 Install Dependencies
       run: |
         cd backend
         npm install
 
-    - name: 🏃 Run Backend Server Tests
+    - name: 🏗 Build Docker Image
       run: |
         cd backend
-        npm test
+        docker build -t ghcr.io/vinaygs911/healthcare-backend:latest .
 
-    - name: ⚡ Install Angular CLI
-      run: npm install -g @angular/cli
+    - name: 🔑 Login to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
 
-    - name: 🔧 Install Frontend Dependencies
+    - name: 📤 Push Docker Image
       run: |
-        cd frontend
-        npm install
+        docker tag ghcr.io/vinaygs911/healthcare-backend:latest ghcr.io/vinaygs911/healthcare-backend:latest
+        docker push ghcr.io/vinaygs911/healthcare-backend:latest
 
-    - name: 🚀 Build Angular App
-      run: |
-        cd frontend
-        ng build --configuration=production
-
-    - name: 📤 Deploy Backend & Frontend
-      run: echo "Deploying backend and frontend..."
+    - name: 🚀 Deploy Backend
+      run: echo "Deployment process here..."
