@@ -18,16 +18,12 @@ jobs:
     - name: 📥 Checkout Repository
       uses: actions/checkout@v3
 
-    - name: 🔑 Login to GitHub Container Registry
-      run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
     - name: 🛠 Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
         cache: 'npm'
-        cache-dependency-path: backend/package-lock.json  # 👈 Ensuring correct cache path
+        cache-dependency-path: backend/package-lock.json
 
     - name: 🔧 Install Dependencies
       run: |
@@ -42,7 +38,3 @@ jobs:
     - name: 📤 Push Docker Image
       run: |
         docker push ghcr.io/vinaygs911/healthcare-backend:latest
-
-    - name: 🚀 Deploy Backend Container (GitHub Codespaces)
-      run: |
-        echo "Deployment step will be configured based on hosting choice."

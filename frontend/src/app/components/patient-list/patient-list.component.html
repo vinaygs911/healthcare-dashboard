@@ -1,0 +1,18 @@
+<div class="patient-list">
+    <h2>Patient Data</h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Heart Rate</th>
+        <th>Blood Pressure</th>
+        <th>Temperature</th>
+      </tr>
+      <tr *ngFor="let patient of patients">
+        <td>{{ patient.name }}</td>
+        <td>{{ patient.heartRate }}</td>
+        <td>{{ patient.bloodPressure }}</td>
+        <td>{{ patient.temperature }}</td>
+      </tr>
+    </table>
+</div>
+  

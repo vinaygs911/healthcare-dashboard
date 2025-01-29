@@ -1,0 +1,59 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: 🛠 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: 🔧 Install Dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: 🏗 Build Angular App
+      run: |
+        cd frontend
+        npm run build -- --configuration=production
+
+    - name: 🚀 Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: frontend/dist
+
+    - name: 🏗 Build Docker Image
+      run: |
+        cd frontend
+        docker build -t ghcr.io/vinaygs911/healthcare-frontend:latest .
+
+    - name: 🔑 Login to GitHub Container Registry
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: 📤 Push Docker Image
+      run: |
+        docker tag ghcr.io/vinaygs911/healthcare-frontend:latest ghcr.io/vinaygs911/healthcare-frontend:latest
+        docker push ghcr.io/vinaygs911/healthcare-frontend:latest
+
+    - name: 🚀 Deploy Frontend Container
+      run: echo "Deployment step will be configured based on hosting choice."

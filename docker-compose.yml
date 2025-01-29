@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ghcr.io/vinaygs911/healthcare-backend:latest
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/healthcare
+    depends_on:
+      - mongo
+
+  frontend:
+    image: ghcr.io/vinaygs911/healthcare-frontend:latest
+    restart: always
+    depends_on:
+      - backend
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
