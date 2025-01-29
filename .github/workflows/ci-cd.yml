@@ -1,0 +1,55 @@
+name: CI/CD Pipeline for Healthcare Dashboard
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: 🛠 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: 🔧 Install Backend Dependencies
+      run: |
+        cd backend
+        npm install
+
+    - name: 🏃 Run Backend Server Tests
+      run: |
+        cd backend
+        npm test
+
+    - name: ⚡ Install Angular CLI
+      run: npm install -g @angular/cli
+
+    - name: 🔧 Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: 🚀 Build Angular App
+      run: |
+        cd frontend
+        ng build --configuration=production
+
+    - name: 📤 Deploy Backend & Frontend
+      run: echo "Deploying backend and frontend..."
