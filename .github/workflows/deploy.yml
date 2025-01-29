@@ -17,12 +17,18 @@ jobs:
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: 📤 Pull Latest Images
+    - name: 🛠 Install Docker-Compose
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose-plugin
+
+    - name: 📤 Pull Latest Docker Images
       run: |
         docker pull ghcr.io/vinaygs911/healthcare-backend:latest
         docker pull ghcr.io/vinaygs911/healthcare-frontend:latest
+        docker pull ghcr.io/vinaygs911/healthcare-nginx:latest  # 🔥 ADDING NGINX IMAGE
 
     - name: 🚀 Deploy Using Docker Compose
       run: |
-        docker-compose down
-        docker-compose up -d
+        docker compose down
+        docker compose up -d

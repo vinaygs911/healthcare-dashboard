@@ -1,20 +1,13 @@
-# Use Node.js base image to build the frontend
-FROM node:18-alpine AS build
+# Use NGINX as base image
+FROM nginx:latest
 
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build -- --configuration=production
+# Copy Angular build output to NGINX HTML directory
+COPY dist/frontend /usr/share/nginx/html
 
-# Use Nginx to serve the Angular app
-FROM nginx:alpine
-
-# Copy built frontend files
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy custom NGINX config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

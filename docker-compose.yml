@@ -9,11 +9,14 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/healthcare
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy  # Ensures MongoDB is ready before starting backend
 
   frontend:
     image: ghcr.io/vinaygs911/healthcare-frontend:latest
     restart: always
+    ports:
+      - "80:80"
     depends_on:
       - backend
 
@@ -32,6 +35,11 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
 
 volumes:
   mongo-data:
