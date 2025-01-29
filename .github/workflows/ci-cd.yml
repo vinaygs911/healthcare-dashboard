@@ -27,6 +27,7 @@ jobs:
       with:
         node-version: 18
         cache: 'npm'
+        cache-dependency-path: backend/package-lock.json  # 👈 Ensuring correct cache path
 
     - name: 🔧 Install Dependencies
       run: |
